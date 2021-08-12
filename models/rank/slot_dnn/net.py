@@ -82,7 +82,6 @@ class BenchmarkDNNLayer(nn.Layer):
                     param_attr=paddle.ParamAttr(name="embedding"))
                 #emb = self.embedding(s_input)
             self.inference_model_feed_vars.append(emb)
-
             bow = paddle.fluid.layers.sequence_pool(input=emb, pool_type='sum')
             self.all_vars.append(bow)
             #paddle.fluid.layers.Print(bow)
