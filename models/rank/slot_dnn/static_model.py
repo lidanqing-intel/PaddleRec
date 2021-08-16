@@ -16,7 +16,10 @@ import math
 import paddle
 
 from net import BenchmarkDNNLayer
-
+import logging
+logging.basicConfig(
+    format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class StaticModel():
     def __init__(self, config):
@@ -25,6 +28,7 @@ class StaticModel():
         self.config = config
         self._init_hyper_parameters()
         self.sync_mode = config.get("runner.sync_mode")
+        self.optimizer = None
 
     def _init_hyper_parameters(self):
         self.is_distributed = False
@@ -86,9 +90,14 @@ class StaticModel():
     def create_optimizer(self, strategy=None):
         optimizer = paddle.optimizer.Adam(
             learning_rate=self.learning_rate, lazy_mode=True)
-        if strategy != None:
-            import paddle.distributed.fleet as fleet
-            optimizer = fleet.distributed_optimizer(optimizer, strategy)
+        # if strategy != None:
+        #     import paddle.distributed.fleet as fleet
+        #     optimizer = fleet.distributed_optimizer(optimizer, strategy)
+    
+        optimizer = paddle.static.amp.bf16.decorate_bf16(
+            optimizer, amp_lists=paddle.static.amp.bf16.AutoMixedPrecisionListsBF16(
+                custom_bf16_list={'sequence_pool'}, ), use_bf16_guard=False, use_pure_bf16=False)
+        logger.info("WARNING!!!! Here it means bf16 is set")
         optimizer.minimize(self._cost)
 
     def infer_net(self, input):

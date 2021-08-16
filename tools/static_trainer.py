@@ -37,6 +37,15 @@ def parse_args():
     parser = argparse.ArgumentParser("PaddleRec train static script")
     parser.add_argument("-m", "--config_yaml", type=str)
     parser.add_argument("-o", "--opt", nargs='*', type=str)
+    
+    parser.add_argument(
+    '-bf16',
+    '--pure_bf16',
+    type=bool,
+    default=False,
+    help="whether use bf16")
+
+    args = parser.parse_args()
     args = parser.parse_args()
     args.abs_dir = os.path.dirname(os.path.abspath(args.config_yaml))
     args.config_yaml = get_abs_model(args.config_yaml)
@@ -50,6 +59,7 @@ def main(args):
     config = load_yaml(args.config_yaml)
     config["yaml_path"] = args.config_yaml
     config["config_abs_dir"] = args.abs_dir
+    config["pure_bf16"]=args.pure_bf16
     # modify config from command
     if args.opt:
         for parameter in args.opt:
@@ -106,11 +116,13 @@ def main(args):
     if use_fleet:
         static_model_class.create_optimizer(strategy)
     else:
-        static_model_class.create_optimizer()
+        static_model_class.create_optimizer(strategy=None)
 
     exe = paddle.static.Executor(place)
     # initialize
     exe.run(paddle.static.default_startup_program())
+    # if config["pure_bf16"]:
+    #         static_model_class.optimizer.amp_init(exe.place)
 
     last_epoch_id = config.get("last_epoch", -1)
 

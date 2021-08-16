@@ -32,6 +32,7 @@ class BenchmarkDNNLayer(nn.Layer):
         self.slot_num = slot_num
         self.layer_sizes = layer_sizes
         self._init_range = 0.2
+        # self.dtype = dtype
 
         # to do
         #self.embedding = paddle.nn.Embedding(
@@ -82,6 +83,7 @@ class BenchmarkDNNLayer(nn.Layer):
                     param_attr=paddle.ParamAttr(name="embedding"))
                 #emb = self.embedding(s_input)
             self.inference_model_feed_vars.append(emb)
+            # bow = paddle.fluid.layers.sequence_pool(input=emb, pool_type='sum', dtype="float32")
             bow = paddle.fluid.layers.sequence_pool(input=emb, pool_type='sum')
             #paddle.fluid.layers.Print(bow)
             embs.append(bow)
