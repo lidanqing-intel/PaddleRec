@@ -96,7 +96,7 @@ class StaticModel():
     
         optimizer = paddle.static.amp.bf16.decorate_bf16(
             optimizer, amp_lists=paddle.static.amp.bf16.AutoMixedPrecisionListsBF16(
-                custom_bf16_list={'matmul'}, ), use_bf16_guard=False, use_pure_bf16=False)
+                custom_bf16_list={'matmul, elementwise_add, scale, sigmoid'}, ), use_bf16_guard=False, use_pure_bf16=False)
         logger.info("WARNING!!!! Here it means bf16 is set")
         optimizer.minimize(self._cost)
 

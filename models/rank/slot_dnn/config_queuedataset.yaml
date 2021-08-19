@@ -22,7 +22,7 @@ runner:
   use_gpu: False
   use_auc: True
   train_batch_size: 2
-  epochs: 20
+  epochs: 5
   print_interval: 10
   model_save_path: "output_model_benchdnn_queue"
 
@@ -50,7 +50,7 @@ hyper_parameters:
     strategy: async
   # user-defined <key, value> pairs
   dict_dim : 1000000
-  emb_dim : 9
+  emb_dim : 500
   sparse_feature_dim: 9
   slot_num: 408
   layer_sizes: [512, 256, 128, 128, 128]
