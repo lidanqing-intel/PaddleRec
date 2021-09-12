@@ -23,7 +23,7 @@ hyper_parameters:
   window_size: 5
 
 runner:
-  epochs: 15
+  epochs: 5
   print_interval: 100
 
   geo_step: 400

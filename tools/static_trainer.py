@@ -39,13 +39,17 @@ def parse_args():
     parser.add_argument("-o", "--opt", nargs='*', type=str)
     
     parser.add_argument(
-    '-bf16',
-    '--pure_bf16',
+    '--bf16',
+    type=bool,
+    default=False,
+    help="whether use bf16")
+    
+    parser.add_argument(
+    '--bf16_lists',
     type=bool,
     default=False,
     help="whether use bf16")
 
-    args = parser.parse_args()
     args = parser.parse_args()
     args.abs_dir = os.path.dirname(os.path.abspath(args.config_yaml))
     args.config_yaml = get_abs_model(args.config_yaml)
@@ -59,7 +63,8 @@ def main(args):
     config = load_yaml(args.config_yaml)
     config["yaml_path"] = args.config_yaml
     config["config_abs_dir"] = args.abs_dir
-    config["pure_bf16"]=args.pure_bf16
+    config["bf16"]=args.bf16
+    config["bf16_lists"]=args.bf16_lists
     # modify config from command
     if args.opt:
         for parameter in args.opt:

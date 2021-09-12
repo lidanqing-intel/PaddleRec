@@ -28,7 +28,6 @@ class StaticModel():
         self.config = config
         self._init_hyper_parameters()
         self.sync_mode = config.get("runner.sync_mode")
-        self.optimizer = None
 
     def _init_hyper_parameters(self):
         self.is_distributed = False
